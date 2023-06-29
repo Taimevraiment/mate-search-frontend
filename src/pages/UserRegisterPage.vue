@@ -17,13 +17,20 @@
           placeholder="请输入密码"
           :rules="[{ required: true, message: '请填写密码' }]"
       />
+      <van-field
+          v-model="checkPassword"
+          type="password"
+          name="checkPassword"
+          label="密码"
+          placeholder="重复输入密码"
+          :rules="[{ required: true, message: '请填写密码' }]"
+      />
     </van-cell-group>
     <div style="margin: 16px;">
       <van-button round block type="primary" native-type="submit">
-        登录
+        注册
       </van-button>
     </div>
-    <router-link to="/user/register" :style="{position:'absolute',right:'30px'}">新用户注册</router-link>
   </van-form>
 </template>
 
@@ -32,29 +39,34 @@ import {useRoute, useRouter} from "vue-router";
 import {ref} from "vue";
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
-import {AxiosResponse} from "axios";
+import {AxiosResponse} from "axios"
 
 const router = useRouter();
 const route = useRoute();
 
 const userAccount = ref('');
 const userPassword = ref('');
+const checkPassword = ref('');
 
 const onSubmit = async () => {
-  const res: AxiosResponse['data'] = await myAxios.post('/user/login', {
+  const res: AxiosResponse['data'] = await myAxios.post('/user/register', {
     userAccount: userAccount.value,
     userPassword: userPassword.value,
-  })
-  console.log(res, '用户登录');
+    checkPassword: checkPassword.value,
+  });
+  console.log(res, '用户注册');
   if (res.code === 0) {
-    Toast.success('登录成功');
+    Toast.success('注册成功');
     // 跳转到之前的页面
     const redirectUrl = route.query?.redirect as string ?? '/';
     window.location.href = redirectUrl;
   } else if (res.code === 40000) {
     Toast.fail(res.description);
+    userAccount.value = '';
+    userPassword.value = '';
+    checkPassword.value = '';
   } else {
-    Toast.fail('登录失败');
+    Toast.fail('注册失败');
   }
 };
 
