@@ -73,6 +73,7 @@ import {useRouter} from "vue-router";
 import {ref} from "vue";
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
+import {AxiosResponse} from "axios";
 
 const router = useRouter();
 // 展示日期选择器
@@ -99,15 +100,15 @@ const onSubmit = async () => {
     status: Number(addTeamData.value.status)
   }
   // todo 前端参数校验
-  const res = await myAxios.post("/team/add", postData);
-  if (res?.code === 0 && res.data){
+  const res: AxiosResponse['data'] = await myAxios.post("/team/add", postData);
+  if (res?.code === 0 && res.data) {
     Toast.success('添加成功');
     router.push({
       path: '/team',
       replace: true,
     });
   } else {
-    Toast.success('添加失败');
+    Toast.fail('添加失败');
   }
 }
 </script>
