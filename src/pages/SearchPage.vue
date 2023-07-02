@@ -32,15 +32,17 @@
 import {ref} from 'vue';
 import {useRouter} from "vue-router";
 
-const router = useRouter()
+const router = useRouter();
 
 const searchText = ref('');
 
 const originTagList = [{
-  text: '性别',
+  text: '语言',
   children: [
-    {text: '男', id: '男'},
-    {text: '女', id: '女'},
+    {text: 'Java', id: 'Java'},
+    {text: 'Python', id: 'Python'},
+    {text: 'C/C++', id: 'C/C++'},
+    {text: 'Go', id: 'Go'},
   ],
 },
   {
@@ -48,10 +50,10 @@ const originTagList = [{
     children: [
       {text: '大一', id: '大一'},
       {text: '大二', id: '大二'},
-      {text: '大3', id: '大3'},
-      {text: '大4', id: '大4'},
-      {text: '大5', id: '大5aaaaaaa'},
-      {text: '大6', id: '大6aaaaaaa'},
+      {text: '大三', id: '大三'},
+      {text: '大四', id: '大四'},
+      {text: '研一', id: '研一'},
+      {text: '研二', id: '研二'},
     ],
   },
 ]
@@ -63,7 +65,7 @@ let tagList = ref(originTagList);
  * 搜索过滤
  * @param val
  */
-const onSearch = (val) => {
+const onSearch = (val: string) => {
   tagList.value = originTagList.map(parentTag => {
     const tempChildren = [...parentTag.children];
     const tempParentTag = {...parentTag};
@@ -82,7 +84,7 @@ const activeIds = ref([]);
 const activeIndex = ref(0);
 
 // 移除标签
-const doClose = (tag) => {
+const doClose = (tag: string) => {
   activeIds.value = activeIds.value.filter(item => {
     return item !== tag;
   })

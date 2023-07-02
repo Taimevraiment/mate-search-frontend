@@ -10,9 +10,9 @@
           {{ tag }}
         </van-tag>
       </template>
-      <template #footer>
-        <van-button size="mini">联系我</van-button>
-      </template>
+      <!--      <template #footer>-->
+      <!--        <van-button size="mini">联系我</van-button>-->
+      <!--      </template>-->
     </van-card>
   </van-skeleton>
 </template>

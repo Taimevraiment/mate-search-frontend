@@ -51,11 +51,14 @@ const onSubmit = async () => {
     // 跳转到之前的页面
     const redirectUrl = route.query?.redirect as string ?? '/';
     window.location.href = redirectUrl;
-  } else if (res.code === 40000) {
-    Toast.fail(res.description);
   } else {
-    Toast.fail('登录失败');
+    userAccount.value = '';
+    userPassword.value = '';
+    Toast.fail(res.description || res.message);
   }
+  // else {
+  //   Toast.fail('登录失败');
+  // }
 };
 
 </script>

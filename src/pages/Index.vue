@@ -1,7 +1,7 @@
 <template>
   <van-cell center title="心动模式">
     <template #right-icon>
-      <van-switch v-model="isMatchMode" size="24" />
+      <van-switch v-model="isMatchMode" size="24"/>
     </template>
   </van-cell>
   <user-card-list :user-list="userList" :loading="loading"/>
@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue';
+import {ref, watchEffect} from 'vue';
 import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import UserCardList from "../components/UserCardList.vue";
@@ -49,15 +49,13 @@ const loadData = async () => {
         pageSize: 8,
         pageNum: 1,
       },
-    })
-        .then(function (response) {
-          console.log('/user/recommend succeed', response);
-          return response?.data?.records;
-        })
-        .catch(function (error) {
-          console.error('/user/recommend error', error);
-          Toast.fail('请求失败');
-        })
+    }).then(function (response) {
+      console.log('/user/recommend succeed', response);
+      return response?.data?.records;
+    }).catch(function (error) {
+      console.error('/user/recommend error', error);
+      Toast.fail('请求失败');
+    });
   }
   if (userListData) {
     userListData.forEach((user: UserType) => {

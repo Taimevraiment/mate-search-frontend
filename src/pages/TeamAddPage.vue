@@ -100,6 +100,7 @@ const onSubmit = async () => {
     status: Number(addTeamData.value.status)
   }
   // todo 前端参数校验
+  if (postData.expireTime == null) Toast.fail("未选择过期时间");
   const res: AxiosResponse['data'] = await myAxios.post("/team/add", postData);
   if (res?.code === 0 && res.data) {
     Toast.success('添加成功');
@@ -108,8 +109,11 @@ const onSubmit = async () => {
       replace: true,
     });
   } else {
-    Toast.fail('添加失败');
+    Toast.fail(res.description || res.message);
   }
+  // else {
+  //   Toast.fail('添加失败');
+  // }
 }
 </script>
 

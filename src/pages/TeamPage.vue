@@ -7,7 +7,7 @@
     </van-tabs>
     <div style="margin-bottom: 16px"/>
     <van-button class="add-button" type="primary" icon="plus" @click="toAddTeam"/>
-    <team-card-list :teamList="teamList"/>
+    <team-card-list :teamList="teamList" @update="onTabChange(currTab)"/>
     <van-empty v-if="teamList?.length < 1" description="数据为空"/>
   </div>
 </template>
@@ -21,7 +21,8 @@ import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import {AxiosResponse} from "axios";
 
-const active = ref('public')
+const active = ref('public');
+const currTab = ref('public');
 const router = useRouter();
 const searchText = ref('');
 
@@ -29,7 +30,8 @@ const searchText = ref('');
  * 切换查询状态
  * @param name
  */
-const onTabChange = (name: String) => {
+const onTabChange = (name: string) => {
+  currTab.value = name;
   // 查公开
   if (name === 'public') {
     listTeam(searchText.value, 0);

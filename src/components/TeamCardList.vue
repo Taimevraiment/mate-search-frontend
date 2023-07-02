@@ -4,7 +4,7 @@
   >
     <van-card
         v-for="team in props.teamList"
-        :thumb="ikun"
+        :thumb="teamlogo"
         :desc="team.description"
         :title="`${team.name}`"
     >
@@ -28,8 +28,7 @@
       </template>
       <template #footer>
         <van-button size="small" type="primary" v-if="team.userId !== currentUser?.id && !team.hasJoin" plain
-                    @click="preJoinTeam(team)">
-          加入队伍
+                    @click="preJoinTeam(team)">加入队伍
         </van-button>
         <van-button v-if="team.userId === currentUser?.id" size="small" plain
                     @click="doUpdateTeam(team.id)">更新队伍
@@ -43,7 +42,8 @@
         </van-button>
       </template>
     </van-card>
-    <van-dialog v-model:show="showPasswordDialog" title="请输入密码" show-cancel-button @confirm="doJoinTeam" @cancel="doJoinCancel">
+    <van-dialog v-model:show="showPasswordDialog" title="请输入密码" show-cancel-button @confirm="doJoinTeam"
+                @cancel="doJoinCancel">
       <van-field v-model="password" placeholder="请输入密码"/>
     </van-dialog>
   </div>
@@ -53,12 +53,13 @@
 <script setup lang="ts">
 import {TeamType} from "../models/team";
 import {teamStatusEnum} from "../constants/team";
-import ikun from '../assets/ikun.png';
+import teamlogo from '../assets/teamlogo.png';
 import myAxios from "../plugins/myAxios";
 import {Dialog, Toast} from "vant";
 import {onMounted, ref} from "vue";
 import {getCurrentUser} from "../services/user";
 import {useRouter} from "vue-router";
+import {AxiosResponse} from "axios";
 
 interface TeamCardListProps {
   teamList: TeamType[];
@@ -73,6 +74,8 @@ const showPasswordDialog = ref(false);
 const password = ref('');
 const joinTeamId = ref(0);
 const currentUser = ref();
+
+const emit = defineEmits(['update']);
 
 const router = useRouter();
 
@@ -101,13 +104,14 @@ const doJoinTeam = async () => {
   if (!joinTeamId.value) {
     return;
   }
-  const res = await myAxios.post('/team/join', {
+  const res: AxiosResponse['data'] = await myAxios.post('/team/join', {
     teamId: joinTeamId.value,
     password: password.value
   });
   if (res?.code === 0) {
     Toast.success('加入成功');
     doJoinCancel();
+    emit('update');
   } else {
     Toast.fail('加入失败' + (res.description ? `，${res.description}` : ''));
   }
@@ -131,11 +135,12 @@ const doUpdateTeam = (id: number) => {
  * @param id
  */
 const doQuitTeam = async (id: number) => {
-  const res = await myAxios.post('/team/quit', {
+  const res: AxiosResponse['data'] = await myAxios.post('/team/quit', {
     teamId: id
   });
   if (res?.code === 0) {
     Toast.success('操作成功');
+    emit('update');
   } else {
     Toast.fail('操作失败' + (res.description ? `，${res.description}` : ''));
   }
@@ -146,11 +151,12 @@ const doQuitTeam = async (id: number) => {
  * @param id
  */
 const doDeleteTeam = async (id: number) => {
-  const res = await myAxios.post('/team/delete', {
+  const res: AxiosResponse['data'] = await myAxios.post('/team/delete', {
     id,
   });
   if (res?.code === 0) {
     Toast.success('操作成功');
+    emit('update');
   } else {
     Toast.fail('操作失败' + (res.description ? `，${res.description}` : ''));
   }
@@ -158,6 +164,7 @@ const doDeleteTeam = async (id: number) => {
 
 </script>
 
+<!--suppress CssInvalidPseudoSelector -->
 <style scoped>
 #teamCardList :deep(.van-image__img) {
   height: 128px;

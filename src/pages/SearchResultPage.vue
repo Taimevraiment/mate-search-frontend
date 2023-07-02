@@ -1,6 +1,6 @@
 <template>
-  <user-card-list :user-list="userList" />
-  <van-empty v-if="!userList || userList.length < 1" description="搜索结果为空" />
+  <user-card-list :user-list="userList" :loading="loading"/>
+  <van-empty v-if="!userList || userList.length < 1" description="搜索结果为空"/>
 </template>
 
 <script setup lang="ts">
@@ -10,32 +10,33 @@ import myAxios from "../plugins/myAxios";
 import {Toast} from "vant";
 import qs from 'qs';
 import UserCardList from "../components/UserCardList.vue";
+import {UserType} from "../models/user";
 
 const route = useRoute();
 const {tags} = route.query;
 
-const userList = ref([]);
+const userList = ref<UserType[]>([]);
+const loading = ref(true);
 
 onMounted(async () => {
-  const userListData = await myAxios.get('/user/search/tags', {
+  const userListData: UserType[] = await myAxios.get('/user/search/tags', {
     params: {
       tagNameList: tags
     },
     paramsSerializer: params => {
       return qs.stringify(params, {indices: false})
     }
-  })
-      .then(function (response) {
-        console.log('/user/search/tags succeed', response);
-        return response?.data;
-      })
-      .catch(function (error) {
-        console.error('/user/search/tags error', error);
-        Toast.fail('请求失败');
-      })
+  }).then(function (response) {
+    console.log('/user/search/tags succeed', response);
+    return response?.data;
+  }).catch(function (error) {
+    console.error('/user/search/tags error', error);
+    Toast.fail('请求失败');
+  });
+  loading.value = false;
   console.log(userListData)
   if (userListData) {
-    userListData.forEach(user => {
+    userListData.forEach((user: UserType) => {
       if (user.tags) {
         user.tags = JSON.parse(user.tags);
       }
@@ -47,9 +48,9 @@ onMounted(async () => {
 
 // const mockUser = {
 //   id: 12345,
-//   username: '鱼皮',
+//   username: 'taim',
 //   userAccount: '12314',
-//   profile: '一名精神小伙，目前还有头发，谢谢大家，阿爸爸阿爸爸阿巴阿巴阿巴',
+//   profile: '一名精神小伙，目前还有头发，哈哈哈哈哈',
 //   avatarUrl: 'https://636f-codenav-8grj8px727565176-1256524210.tcb.qcloud.la/img/logo.png',
 //   gender: 0,
 //   phone: '13113113111',
