@@ -33,15 +33,13 @@ const loadData = async () => {
       params: {
         num,
       },
+    }).then(function (response) {
+      console.log('/user/match succeed', response);
+      return response?.data;
+    }).catch(function (error) {
+      console.error('/user/match error', error);
+      Toast.fail('请求失败');
     })
-        .then(function (response) {
-          console.log('/user/match succeed', response);
-          return response?.data;
-        })
-        .catch(function (error) {
-          console.error('/user/match error', error);
-          Toast.fail('请求失败');
-        })
   } else {
     // 普通模式，直接分页查询用户
     userListData = await myAxios.get('/user/recommend', {
