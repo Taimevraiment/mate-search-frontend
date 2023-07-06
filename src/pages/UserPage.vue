@@ -18,8 +18,8 @@ import {setCurrentUserState} from "../states/user";
 
 // const user = {
 //   id: 1,
-//   username: '鱼皮',
-//   userAccount: 'dogYupi',
+//   username: 'taim',
+//   userAccount: 'taimacc',
 //   avatarUrl: 'https://636f-codenav-8grj8px727565176-1256524210.tcb.qcloud.la/img/logo.png',
 //   gender: '男',
 //   phone: '123112312',
